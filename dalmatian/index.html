@@ -2,10 +2,541 @@
 <html lang="en">
 
 <head>
+    <!-- This game is dedicated to the public domain https://creativecommons.org/publicdomain/zero/1.0/ -->
+    <!-- June 2020 -->
     <title>Dalmatian Retrieve Sphere</title>
+    <style type="text/css">
+        #tenPercentMargin {
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        #dalmatianRetrieveSphereVectorContainer {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding: 0;
+            padding-bottom: 56.25%;
+        }
+
+        #dalmatianRetrieveSphereVector {
+            touch-action: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+        }
+
+        #dalmatianScore {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var dalmatianRetrieveSphere = {
+            "load": function (event) {
+                console.log("Hello Dalmatian!");
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector = document.getElementById("dalmatianRetrieveSphereVector");
+                dalmatianRetrieveSphere.dalmatianBallElement = document.getElementById("dalmatianBall");
+                dalmatianRetrieveSphere.dalmatianVectorElement = document.getElementById("dalmatianVector");
+                dalmatianRetrieveSphere.dalmatianScoreElement = document.getElementById("dalmatianScore");
+                window.addEventListener("keydown", dalmatianRetrieveSphere.keydownEventHandler, false);
+                window.addEventListener("keyup", dalmatianRetrieveSphere.keyupEventHandler, false);
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointerdown", dalmatianRetrieveSphere.onpointerdownEventHandler, false);
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointerup", dalmatianRetrieveSphere.onpointerupEventHandler, false);
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointermove", dalmatianRetrieveSphere.onpointermoveEventHandler, false);
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointercancel", dalmatianRetrieveSphere.onpointercancelEventHandler, false);
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("contextmenu", function(event){event.preventDefault();}, false);
+                window.requestAnimationFrame(dalmatianRetrieveSphere.animationStart);
+            },
+            "animationStart": function (timestamp) {
+                dalmatianRetrieveSphere.startTimeStamp = timestamp;
+                dalmatianRetrieveSphere.previousTimeStamp = timestamp;
+                dalmatianRetrieveSphere.keyboardUp = false;
+                dalmatianRetrieveSphere.keyboardRight = false;
+                dalmatianRetrieveSphere.keyboardDown = false;
+                dalmatianRetrieveSphere.keyboardLeft = false;
+                dalmatianRetrieveSphere.keyboardW = false;
+                dalmatianRetrieveSphere.keyboardD = false;
+                dalmatianRetrieveSphere.keyboardS = false;
+                dalmatianRetrieveSphere.keyboardA = false;
+                dalmatianRetrieveSphere.pointerDown = false;
+                dalmatianRetrieveSphere.relativeX = 0;
+                dalmatianRetrieveSphere.relativeY = 0;
+                window.requestAnimationFrame(dalmatianRetrieveSphere.animationFrame);
+            },
+            "animationFrame": function (timestamp) {
+                if (timestamp < dalmatianRetrieveSphere.startTimeStamp) {
+                    window.requestAnimationFrame(dalmatianRetrieveSphere.animationStart);
+                    return;
+                }
+                if (timestamp < dalmatianRetrieveSphere.previousTimeStamp) {
+                    window.requestAnimationFrame(dalmatianRetrieveSphere.animationStart);
+                    return;
+                }
+                //var totalElapsed = timestamp - dalmatianRetrieveSphere.startTimeStamp;
+                var elapsed = timestamp - dalmatianRetrieveSphere.previousTimeStamp;
+                if (elapsed >= (1000.0 / 30.0)) {
+                    dalmatianRetrieveSphere.previousTimeStamp = timestamp;
+                    var dalmatianCenterX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + 40;
+                    var dalmatianCenterY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + 40;
+                    var dalmatianMoveUp = false;
+                    var dalmatianMoveRight = false;
+                    var dalmatianMoveDown = false;
+                    var dalmatianMoveLeft = false;
+                    var dalmatianShouldMove = false;
+                    if (dalmatianRetrieveSphere.keyboardW || dalmatianRetrieveSphere.keyboardUp) {
+                        dalmatianMoveUp = true;
+                    }
+                    if (dalmatianRetrieveSphere.keyboardD || dalmatianRetrieveSphere.keyboardRight) {
+                        dalmatianMoveRight = true;
+                    }
+                    if (dalmatianRetrieveSphere.keyboardS || dalmatianRetrieveSphere.keyboardDown) {
+                        dalmatianMoveDown = true;
+                    }
+                    if (dalmatianRetrieveSphere.keyboardA || dalmatianRetrieveSphere.keyboardLeft) {
+                        dalmatianMoveLeft = true;
+                    }
+                    if (dalmatianRetrieveSphere.pointerDown) {
+                        if (dalmatianRetrieveSphere.relativeX <= (dalmatianCenterX - 8)) {
+                            dalmatianMoveLeft = true;
+                        }
+                        if (dalmatianRetrieveSphere.relativeX >= (dalmatianCenterX + 8)) {
+                            dalmatianMoveRight = true;
+                        }
+                        if (dalmatianRetrieveSphere.relativeY <= (dalmatianCenterY - 8)) {
+                            dalmatianMoveUp = true;
+                        }
+                        if (dalmatianRetrieveSphere.relativeY >= (dalmatianCenterY + 8)) {
+                            dalmatianMoveDown = true;
+                        }
+                    }
+                    if (dalmatianMoveLeft && dalmatianMoveRight) {
+                        dalmatianMoveLeft = false;
+                        dalmatianMoveRight = false;
+                    }
+                    if (dalmatianMoveUp && dalmatianMoveDown) {
+                        dalmatianMoveUp = false;
+                        dalmatianMoveDown = false;
+                    }
+                    if (dalmatianMoveUp || dalmatianMoveRight || dalmatianMoveDown || dalmatianMoveLeft) {
+                        dalmatianShouldMove = true;
+                        var dalmatianMoveNinety = 8;
+                        var dalmatianMoveFortyFive = 6;
+                        if (dalmatianMoveUp) {
+                            if (dalmatianMoveRight) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY - dalmatianMoveFortyFive;
+                            } else if (dalmatianMoveLeft) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX - dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY - dalmatianMoveFortyFive;
+                            } else {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY - dalmatianMoveNinety;
+                            }
+                        } else if (dalmatianMoveRight) {
+                            if (dalmatianMoveUp) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY - dalmatianMoveFortyFive;
+                            } else if (dalmatianMoveDown) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + dalmatianMoveFortyFive;
+                            } else {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + dalmatianMoveNinety;
+                            }
+                        } else if (dalmatianMoveDown) {
+                            if (dalmatianMoveRight) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + dalmatianMoveFortyFive;
+                            } else if (dalmatianMoveLeft) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX - dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + dalmatianMoveFortyFive;
+                            } else {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + dalmatianMoveNinety;
+                            }
+                        } else {
+                            if (dalmatianMoveUp) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX - dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY - dalmatianMoveFortyFive;
+                            } else if (dalmatianMoveDown) {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX - dalmatianMoveFortyFive;
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + dalmatianMoveFortyFive;
+                            } else {
+                                dalmatianRetrieveSphere.dalmatianVectorTranslateX = dalmatianRetrieveSphere.dalmatianVectorTranslateX - dalmatianMoveNinety;
+                            }
+                        }
+                    }
+                    if (dalmatianShouldMove) {
+                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateX < 0) {
+                            dalmatianRetrieveSphere.dalmatianVectorTranslateX = 0;
+                        }
+                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateY < 0) {
+                            dalmatianRetrieveSphere.dalmatianVectorTranslateY = 0;
+                        }
+                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateX > 1200) {
+                            dalmatianRetrieveSphere.dalmatianVectorTranslateX = 1200;
+                        }
+                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateY > 560) {
+                            dalmatianRetrieveSphere.dalmatianVectorTranslateY = 560;
+                        }
+                        dalmatianRetrieveSphere.dalmatianVectorElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianVectorTranslateX, dalmatianRetrieveSphere.dalmatianVectorTranslateY);
+                    }
+                    if (dalmatianRetrieveSphere.calculateCollision()) {
+                        dalmatianRetrieveSphere.score = dalmatianRetrieveSphere.score + 1;
+                        do {
+                            dalmatianRetrieveSphere.dalmatianBallTranslateX = Math.floor(Math.random() * 16) * 80;
+                            dalmatianRetrieveSphere.dalmatianBallTranslateY = Math.floor(Math.random() * 8) * 80;
+                        } while (dalmatianRetrieveSphere.calculateCollision());
+                        dalmatianRetrieveSphere.dalmatianBallElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianBallTranslateX, dalmatianRetrieveSphere.dalmatianBallTranslateY);
+                        if (dalmatianRetrieveSphere.score > 9) {
+                            dalmatianRetrieveSphere.dalmatianScoreElement.textContent = "The Dalmatian won the game! The end! Score:" + dalmatianRetrieveSphere.score;
+                        } else {
+                            dalmatianRetrieveSphere.dalmatianScoreElement.textContent = "Score:" + dalmatianRetrieveSphere.score;
+                        }
+                    }
+                }
+                window.requestAnimationFrame(dalmatianRetrieveSphere.animationFrame);
+            },
+            "calculateCollision": function () {
+                var dalmatianBallCollisionX = dalmatianRetrieveSphere.dalmatianBallTranslateX + 30;
+                var dalmatianBallCollisionY = dalmatianRetrieveSphere.dalmatianBallTranslateY + 30;
+                var dalmatianBallCollisionWidth = 20;
+                var dalmatianBallCollisionHeight = 20;
+                var dalmatianVectorCollisionX = dalmatianRetrieveSphere.dalmatianVectorTranslateX + 27;
+                var dalmatianVectorCollisionY = dalmatianRetrieveSphere.dalmatianVectorTranslateY + 18;
+                var dalmatianVectorCollisionWidth = 26;
+                var dalmatianVectorCollisionHeight = 34;
+                // https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+                if (dalmatianBallCollisionX < dalmatianVectorCollisionX + dalmatianVectorCollisionWidth &&
+                    dalmatianBallCollisionX + dalmatianBallCollisionWidth > dalmatianVectorCollisionX &&
+                    dalmatianBallCollisionY < dalmatianVectorCollisionY + dalmatianVectorCollisionHeight &&
+                    dalmatianBallCollisionY + dalmatianBallCollisionHeight > dalmatianVectorCollisionY) {
+                    return true;
+                }
+                return false;
+            },
+            "keydownEventHandler": function (event) {
+                // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
+                if (event.defaultPrevented) {
+                    return;
+                }
+                switch (event.key) {
+                    case "w":
+                    case "W":
+                        dalmatianRetrieveSphere.keyboardW = true;
+                        break;
+                    case "d":
+                    case "D":
+                        dalmatianRetrieveSphere.keyboardD = true;
+                        break;
+                    case "s":
+                    case "S":
+                        dalmatianRetrieveSphere.keyboardS = true;
+                        break;
+                    case "a":
+                    case "A":
+                        dalmatianRetrieveSphere.keyboardA = true;
+                        break;
+                    case "Up":
+                    case "ArrowUp":
+                        dalmatianRetrieveSphere.keyboardUp = true;
+                        break;
+                    case "Right":
+                    case "ArrowRight":
+                        dalmatianRetrieveSphere.keyboardRight = true;
+                        break;
+                    case "Down":
+                    case "ArrowDown":
+                        dalmatianRetrieveSphere.keyboardDown = true;
+                        break;
+                    case "Left":
+                    case "ArrowLeft":
+                        dalmatianRetrieveSphere.keyboardLeft = true;
+                        break;
+                    default:
+                        return;
+                }
+                event.preventDefault();
+            },
+            "keyupEventHandler": function (event) {
+                // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
+                if (event.defaultPrevented) {
+                    return;
+                }
+                switch (event.key) {
+                    case "w":
+                    case "W":
+                        dalmatianRetrieveSphere.keyboardW = false;
+                        break;
+                    case "d":
+                    case "D":
+                        dalmatianRetrieveSphere.keyboardD = false;
+                        break;
+                    case "s":
+                    case "S":
+                        dalmatianRetrieveSphere.keyboardS = false;
+                        break;
+                    case "a":
+                    case "A":
+                        dalmatianRetrieveSphere.keyboardA = false;
+                        break;
+                    case "Up":
+                    case "ArrowUp":
+                        dalmatianRetrieveSphere.keyboardUp = false;
+                        break;
+                    case "Right":
+                    case "ArrowRight":
+                        dalmatianRetrieveSphere.keyboardRight = false;
+                        break;
+                    case "Down":
+                    case "ArrowDown":
+                        dalmatianRetrieveSphere.keyboardDown = false;
+                        break;
+                    case "Left":
+                    case "ArrowLeft":
+                        dalmatianRetrieveSphere.keyboardLeft = false;
+                        break;
+                    default:
+                        return;
+                }
+                event.preventDefault();
+            },
+            "onpointerdownEventHandler": function (event) {
+                var point = dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.createSVGPoint();
+                point.x = event.clientX;
+                point.y = event.clientY;
+                var relativePoint = point.matrixTransform(dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.getScreenCTM().inverse());
+                var relativeX = Math.floor(relativePoint.x);
+                var relativeY = Math.floor(relativePoint.y);
+                dalmatianRetrieveSphere.relativeX = relativeX;
+                dalmatianRetrieveSphere.relativeY = relativeY;
+                dalmatianRetrieveSphere.pointerDown = true;
+            },
+            "onpointerupEventHandler": function (event) {
+                var point = dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.createSVGPoint();
+                point.x = event.clientX;
+                point.y = event.clientY;
+                var relativePoint = point.matrixTransform(dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.getScreenCTM().inverse());
+                var relativeX = Math.floor(relativePoint.x);
+                var relativeY = Math.floor(relativePoint.y);
+                dalmatianRetrieveSphere.relativeX = relativeX;
+                dalmatianRetrieveSphere.relativeY = relativeY;
+                dalmatianRetrieveSphere.pointerDown = false;
+            },
+            "onpointermoveEventHandler": function (event) {
+                var point = dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.createSVGPoint();
+                point.x = event.clientX;
+                point.y = event.clientY;
+                var relativePoint = point.matrixTransform(dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.getScreenCTM().inverse());
+                var relativeX = Math.floor(relativePoint.x);
+                var relativeY = Math.floor(relativePoint.y);
+                dalmatianRetrieveSphere.relativeX = relativeX;
+                dalmatianRetrieveSphere.relativeY = relativeY;
+            },
+            "onpointercancelEventHandler": function (event) {
+                dalmatianRetrieveSphere.pointerDown = false;
+            },
+            "dalmatianRetrieveSphereVector": null,
+            "dalmatianBallElement": null,
+            "dalmatianVectorElement": null,
+            "dalmatianScoreElement": null,
+            "dalmatianBallTranslateX": 560,
+            "dalmatianBallTranslateY": 240,
+            "dalmatianVectorTranslateX": 0,
+            "dalmatianVectorTranslateY": 0,
+            "keyboardUp": false,
+            "keyboardRight": false,
+            "keyboardDown": false,
+            "keyboardLeft": false,
+            "keyboardW": false,
+            "keyboardD": false,
+            "keyboardS": false,
+            "keyboardA": false,
+            "pointerDown": false,
+            "relativeX": 0,
+            "relativeY": 0,
+            "score": 0,
+            "startTimeStamp": 0.0,
+            "previousTimeStamp": 0.0
+        };
+        window.addEventListener("load", dalmatianRetrieveSphere.load);
+    </script>
 </head>
 
 <body>
+    <div id="tenPercentMargin">
+        <div id="dalmatianRetrieveSphereVectorContainer">
+            <svg id="dalmatianRetrieveSphereVector" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMinYMin meet" draggable="false">
+                <rect x="0" y="0" width="1280" height="720" fill="rgb(255,255,255)" />
+
+                <rect x="0" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="80" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="160" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="240" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="320" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="400" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="480" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="560" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="640" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="720" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="800" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="880" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="960" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1040" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1120" y="0" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1200" y="0" width="80" height="80" fill="rgb(0,255,0)" />
+
+                <rect x="0" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="80" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="160" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="240" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="320" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="400" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="480" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="560" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="640" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="720" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="800" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="880" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="960" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1040" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1120" y="80" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1200" y="80" width="80" height="80" fill="rgb(0,128,0)" />
+
+                <rect x="0" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="80" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="160" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="240" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="320" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="400" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="480" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="560" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="640" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="720" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="800" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="880" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="960" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1040" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1120" y="160" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1200" y="160" width="80" height="80" fill="rgb(0,255,0)" />
+
+                <rect x="0" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="80" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="160" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="240" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="320" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="400" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="480" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="560" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="640" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="720" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="800" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="880" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="960" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1040" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1120" y="240" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1200" y="240" width="80" height="80" fill="rgb(0,128,0)" />
+
+                <rect x="0" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="80" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="160" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="240" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="320" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="400" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="480" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="560" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="640" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="720" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="800" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="880" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="960" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1040" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1120" y="320" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1200" y="320" width="80" height="80" fill="rgb(0,255,0)" />
+
+                <rect x="0" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="80" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="160" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="240" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="320" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="400" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="480" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="560" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="640" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="720" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="800" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="880" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="960" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1040" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1120" y="400" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1200" y="400" width="80" height="80" fill="rgb(0,128,0)" />
+
+                <rect x="0" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="80" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="160" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="240" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="320" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="400" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="480" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="560" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="640" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="720" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="800" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="880" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="960" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1040" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1120" y="480" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1200" y="480" width="80" height="80" fill="rgb(0,255,0)" />
+
+                <rect x="0" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="80" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="160" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="240" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="320" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="400" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="480" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="560" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="640" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="720" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="800" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="880" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="960" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1040" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+                <rect x="1120" y="560" width="80" height="80" fill="rgb(0,255,0)" />
+                <rect x="1200" y="560" width="80" height="80" fill="rgb(0,128,0)" />
+
+                <rect x="0" y="640" width="1280" height="80" fill="rgb(255,255,255)" />
+                <g id="dalmatianBall" transform="translate(560,240)">
+                    <circle cx="40" cy="40" r="10" fill="rgb(0,0,255)" stroke-width="2" stroke="rgb(0,0,0)" />
+                </g>
+                <g id="dalmatianVector" transform="translate(0,0)">
+                    <path d="M 35 20 L 20 25 L 21 35 L 25 42" fill="rgb(255,255,255)" stroke-width="2"
+                        stroke="rgb(0,0,0)" />
+                    <path d="M 45 20 L 60 25 L 59 35 L 55 42" fill="rgb(0,0,0)" stroke-width="2" stroke="rgb(0,0,0)" />
+                    <circle cx="23" cy="28" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="25" cy="31" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="25" cy="35" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="57" cy="34" r="1" fill="rgb(255,255,255)" stroke-width="1" stroke="rgb(255,255,255)" />
+                    <circle cx="56" cy="37" r="1" fill="rgb(255,255,255)" stroke-width="1" stroke="rgb(255,255,255)" />
+                    <ellipse cx="40" cy="35" rx="13" ry="17" fill="rgb(255,255,255)" stroke-width="2"
+                        stroke="rgb(0,0,0)" />
+                    <path d="M 32 42 A 7 13 0 1 0 48 42" fill="rgb(255,255,255)" stroke-width="2" stroke="rgb(0,0,0)" />
+                    <ellipse cx="33" cy="35" rx="2.5" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)"
+                        transform="rotate(15,32,35)" />
+                    <ellipse cx="47" cy="35" rx="2.5" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)"
+                        transform="rotate(-15,48,35)" />
+                    <ellipse cx="40" cy="53" rx="3" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)" />
+                    <circle cx="44" cy="47" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                </g>
+                <text id="dalmatianScore" x="40px" y="680px" fill="rgb(0,0,0)" font-family="monospace" font-size="16px"
+                    draggable="false">Score:0</text>
+            </svg>
+        </div>
+    </div>
 </body>
 
 </html>
