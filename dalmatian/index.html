@@ -41,6 +41,7 @@
             "load": function (event) {
                 console.log("Hello Dalmatian!");
                 dalmatianRetrieveSphere.dalmatianRetrieveSphereVector = document.getElementById("dalmatianRetrieveSphereVector");
+                dalmatianRetrieveSphere.dalmatianBaseVectorElement = document.getElementById("dalmatianBaseVector");
                 dalmatianRetrieveSphere.dalmatianBallElement = document.getElementById("dalmatianBall");
                 dalmatianRetrieveSphere.dalmatianVectorElement = document.getElementById("dalmatianVector");
                 dalmatianRetrieveSphere.dalmatianScoreElement = document.getElementById("dalmatianScore");
@@ -50,7 +51,7 @@
                 dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointerup", dalmatianRetrieveSphere.onpointerupEventHandler, false);
                 dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointermove", dalmatianRetrieveSphere.onpointermoveEventHandler, false);
                 dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("pointercancel", dalmatianRetrieveSphere.onpointercancelEventHandler, false);
-                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("contextmenu", function(event){event.preventDefault();}, false);
+                dalmatianRetrieveSphere.dalmatianRetrieveSphereVector.addEventListener("contextmenu", function (event) { event.preventDefault(); }, false);
                 window.requestAnimationFrame(dalmatianRetrieveSphere.animationStart);
             },
             "animationStart": function (timestamp) {
@@ -176,19 +177,20 @@
                         if (dalmatianRetrieveSphere.dalmatianVectorTranslateY < 0) {
                             dalmatianRetrieveSphere.dalmatianVectorTranslateY = 0;
                         }
-                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateX > 1200) {
-                            dalmatianRetrieveSphere.dalmatianVectorTranslateX = 1200;
+                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateX > 560) {
+                            dalmatianRetrieveSphere.dalmatianVectorTranslateX = 560;
                         }
-                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateY > 560) {
-                            dalmatianRetrieveSphere.dalmatianVectorTranslateY = 560;
+                        if (dalmatianRetrieveSphere.dalmatianVectorTranslateY > 240) {
+                            dalmatianRetrieveSphere.dalmatianVectorTranslateY = 240;
                         }
+                        dalmatianRetrieveSphere.dalmatianBaseVectorElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianVectorTranslateX, dalmatianRetrieveSphere.dalmatianVectorTranslateY);
                         dalmatianRetrieveSphere.dalmatianVectorElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianVectorTranslateX, dalmatianRetrieveSphere.dalmatianVectorTranslateY);
                     }
                     if (dalmatianRetrieveSphere.calculateCollision()) {
                         dalmatianRetrieveSphere.score = dalmatianRetrieveSphere.score + 1;
                         do {
-                            dalmatianRetrieveSphere.dalmatianBallTranslateX = Math.floor(Math.random() * 16) * 80;
-                            dalmatianRetrieveSphere.dalmatianBallTranslateY = Math.floor(Math.random() * 8) * 80;
+                            dalmatianRetrieveSphere.dalmatianBallTranslateX = Math.floor(Math.random() * 8) * 80;
+                            dalmatianRetrieveSphere.dalmatianBallTranslateY = Math.floor(Math.random() * 4) * 80;
                         } while (dalmatianRetrieveSphere.calculateCollision());
                         dalmatianRetrieveSphere.dalmatianBallElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianBallTranslateX, dalmatianRetrieveSphere.dalmatianBallTranslateY);
                         if (dalmatianRetrieveSphere.score > 9) {
@@ -340,6 +342,7 @@
                 dalmatianRetrieveSphere.pointerDown = false;
             },
             "dalmatianRetrieveSphereVector": null,
+            "dalmatianBaseVectorElement": null,
             "dalmatianBallElement": null,
             "dalmatianVectorElement": null,
             "dalmatianScoreElement": null,
@@ -369,7 +372,7 @@
 <body>
     <div id="tenPercentMargin">
         <div id="dalmatianRetrieveSphereVectorContainer">
-            <svg id="dalmatianRetrieveSphereVector" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg"
+            <svg id="dalmatianRetrieveSphereVector" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio="xMinYMin meet" draggable="false">
                 <rect x="0" y="0" width="1280" height="720" fill="rgb(255,255,255)" />
 
@@ -381,14 +384,6 @@
                 <rect x="400" y="0" width="80" height="80" fill="rgb(0,255,0)" />
                 <rect x="480" y="0" width="80" height="80" fill="rgb(0,128,0)" />
                 <rect x="560" y="0" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="640" y="0" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="720" y="0" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="800" y="0" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="880" y="0" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="960" y="0" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1040" y="0" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1120" y="0" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1200" y="0" width="80" height="80" fill="rgb(0,255,0)" />
 
                 <rect x="0" y="80" width="80" height="80" fill="rgb(0,255,0)" />
                 <rect x="80" y="80" width="80" height="80" fill="rgb(0,128,0)" />
@@ -398,14 +393,6 @@
                 <rect x="400" y="80" width="80" height="80" fill="rgb(0,128,0)" />
                 <rect x="480" y="80" width="80" height="80" fill="rgb(0,255,0)" />
                 <rect x="560" y="80" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="640" y="80" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="720" y="80" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="800" y="80" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="880" y="80" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="960" y="80" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1040" y="80" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1120" y="80" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1200" y="80" width="80" height="80" fill="rgb(0,128,0)" />
 
                 <rect x="0" y="160" width="80" height="80" fill="rgb(0,128,0)" />
                 <rect x="80" y="160" width="80" height="80" fill="rgb(0,255,0)" />
@@ -415,14 +402,6 @@
                 <rect x="400" y="160" width="80" height="80" fill="rgb(0,255,0)" />
                 <rect x="480" y="160" width="80" height="80" fill="rgb(0,128,0)" />
                 <rect x="560" y="160" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="640" y="160" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="720" y="160" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="800" y="160" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="880" y="160" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="960" y="160" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1040" y="160" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1120" y="160" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1200" y="160" width="80" height="80" fill="rgb(0,255,0)" />
 
                 <rect x="0" y="240" width="80" height="80" fill="rgb(0,255,0)" />
                 <rect x="80" y="240" width="80" height="80" fill="rgb(0,128,0)" />
@@ -432,84 +411,31 @@
                 <rect x="400" y="240" width="80" height="80" fill="rgb(0,128,0)" />
                 <rect x="480" y="240" width="80" height="80" fill="rgb(0,255,0)" />
                 <rect x="560" y="240" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="640" y="240" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="720" y="240" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="800" y="240" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="880" y="240" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="960" y="240" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1040" y="240" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1120" y="240" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1200" y="240" width="80" height="80" fill="rgb(0,128,0)" />
 
-                <rect x="0" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="80" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="160" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="240" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="320" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="400" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="480" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="560" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="640" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="720" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="800" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="880" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="960" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1040" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1120" y="320" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1200" y="320" width="80" height="80" fill="rgb(0,255,0)" />
-
-                <rect x="0" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="80" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="160" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="240" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="320" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="400" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="480" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="560" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="640" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="720" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="800" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="880" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="960" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1040" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1120" y="400" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1200" y="400" width="80" height="80" fill="rgb(0,128,0)" />
-
-                <rect x="0" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="80" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="160" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="240" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="320" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="400" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="480" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="560" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="640" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="720" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="800" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="880" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="960" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1040" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1120" y="480" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1200" y="480" width="80" height="80" fill="rgb(0,255,0)" />
-
-                <rect x="0" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="80" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="160" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="240" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="320" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="400" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="480" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="560" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="640" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="720" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="800" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="880" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="960" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1040" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-                <rect x="1120" y="560" width="80" height="80" fill="rgb(0,255,0)" />
-                <rect x="1200" y="560" width="80" height="80" fill="rgb(0,128,0)" />
-
-                <rect x="0" y="640" width="1280" height="80" fill="rgb(255,255,255)" />
+                <rect x="0" y="320" width="640" height="40" fill="rgb(255,255,255)" />
+                <g id="dalmatianBaseVector" transform="translate(0,0)">
+                    <path d="M 40 42 A 10 12 0 1 1 20 48 L 22 46 A 8 12 0 1 0 40 34 Z" fill="rgb(255,255,255)"
+                        stroke-width="2" stroke="rgb(0,0,0)"></path>
+                    <path
+                        d="M 40 53 A 2 7 15 1 0 25 75 L 24 79 L 28 79 L 30 65 L 28 79 L 34 79 L 36 67 A 5 2 0 0 0 44 67 L 46 79 L 52 79 L 50 65 L 52 79 L 56 79 L 55 75 A 2 7 -15 1 0 40 53 Z"
+                        fill="rgb(255,255,255)" stroke-width="2" stroke="rgb(0,0,0)" />
+                    <circle cx="33" cy="56" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="35" cy="59" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="31" cy="59" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="38" cy="60" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="44" cy="59" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="45" cy="62" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="48" cy="57" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="37" cy="65" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="32" cy="70" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="48" cy="72" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="27" cy="68" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="54" cy="74" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="33" cy="75" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="33" cy="66" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="30" cy="63" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                    <circle cx="50" cy="62" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                </g>
                 <g id="dalmatianBall" transform="translate(560,240)">
                     <circle cx="40" cy="40" r="10" fill="rgb(0,0,255)" stroke-width="2" stroke="rgb(0,0,0)" />
                 </g>
@@ -532,7 +458,7 @@
                     <ellipse cx="40" cy="53" rx="3" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)" />
                     <circle cx="44" cy="47" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
                 </g>
-                <text id="dalmatianScore" x="40px" y="680px" fill="rgb(0,0,0)" font-family="monospace" font-size="16px"
+                <text id="dalmatianScore" x="40px" y="340px" fill="rgb(0,0,0)" font-family="monospace" font-size="16px"
                     draggable="false">Score:0</text>
             </svg>
         </div>
