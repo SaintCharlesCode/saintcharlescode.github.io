@@ -194,11 +194,7 @@
                         } while (dalmatianRetrieveSphere.calculateCollision());
                         dalmatianRetrieveSphere.dalmatianBallElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianBallTranslateX, dalmatianRetrieveSphere.dalmatianBallTranslateY);
                         if (dalmatianRetrieveSphere.score == 10) {
-                            try {
-                                document.getElementById("winnerAudio").play();
-                            } catch(e) {
-
-                            }
+                            document.getElementById("winnerAudio").setAttribute("controls", "");
                         }
                         if (dalmatianRetrieveSphere.score > 9) {
                             dalmatianRetrieveSphere.dalmatianScoreElement.textContent = "The Dalmatian won the game! The end! Score:" + dalmatianRetrieveSphere.score;
