@@ -193,6 +193,13 @@
                             dalmatianRetrieveSphere.dalmatianBallTranslateY = Math.floor(Math.random() * 4) * 80;
                         } while (dalmatianRetrieveSphere.calculateCollision());
                         dalmatianRetrieveSphere.dalmatianBallElement.transform.baseVal.getItem(0).setTranslate(dalmatianRetrieveSphere.dalmatianBallTranslateX, dalmatianRetrieveSphere.dalmatianBallTranslateY);
+                        if (dalmatianRetrieveSphere.score == 10) {
+                            try {
+                                document.getElementById("winnerAudio").play();
+                            } catch(e) {
+
+                            }
+                        }
                         if (dalmatianRetrieveSphere.score > 9) {
                             dalmatianRetrieveSphere.dalmatianScoreElement.textContent = "The Dalmatian won the game! The end! Score:" + dalmatianRetrieveSphere.score;
                         } else {
@@ -463,6 +470,7 @@
             </svg>
         </div>
     </div>
+    <audio id="winnerAudio" src="winner.mp3"></audio>
 </body>
 
 </html>
