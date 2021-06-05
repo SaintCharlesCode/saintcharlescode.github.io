@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- This game is dedicated to the public domain https://creativecommons.org/publicdomain/zero/1.0/ -->
+    <!-- June 2021 -->
+    <meta name="color-scheme" content="light dark" />
+    <title>Dalmatian 1 2 3</title>
+    <style type="text/css">
+        table,
+        th,
+        td {
+            border: 1px solid;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var Dalmatian123 = {
+            "Level": 1,
+            "Dalmatian": {
+                "PreviousHands": [],
+                "CurrentHand": "None",
+                "Wins": 0,
+                "Losses": 0,
+                "Ties": 0
+            },
+            "You": {
+                "PreviousHands": [],
+                "CurrentHand": "None",
+                "Wins": 0,
+                "Losses": 0,
+                "Ties": 0
+            },
+            "LevelComplete": false,
+            "Load": function () {
+                document.querySelector("#RockButton").addEventListener("click", Dalmatian123.RockClick);
+                document.querySelector("#PaperButton").addEventListener("click", Dalmatian123.PaperClick);
+                document.querySelector("#ScissorsButton").addEventListener("click", Dalmatian123.ScissorsClick);
+                document.querySelector("#ContinueButton").addEventListener("click", Dalmatian123.ContinueClick);
+                Dalmatian123.DisableContinueButton(true);
+                Dalmatian123.DisableRPCButtons(false);
+                Dalmatian123.DisplayScore();
+            },
+            "RockClick": function (e) {
+                Dalmatian123.ProcessHand("Rock");
+                Dalmatian123.UpdateScore();
+                Dalmatian123.DisplayScore();
+            },
+            "PaperClick": function (e) {
+                Dalmatian123.ProcessHand("Paper");
+                Dalmatian123.UpdateScore();
+                Dalmatian123.DisplayScore();
+            },
+            "ScissorsClick": function (e) {
+                Dalmatian123.ProcessHand("Scissors");
+                Dalmatian123.UpdateScore();
+                Dalmatian123.DisplayScore();
+            },
+            "ContinueClick": function (e) {
+                Dalmatian123.ResetPlayer(Dalmatian123.Dalmatian);
+                Dalmatian123.ResetPlayer(Dalmatian123.You);
+                if (Dalmatian123.LevelComplete) {
+                    if (Dalmatian123.Level >= 5) {
+                        Dalmatian123.Level = 1;
+                    } else {
+                        if (Dalmatian123.Level < 1) {
+                            Dalmatian123.Level = 1;
+                        } else {
+                            Dalmatian123.Level = Dalmatian123.Level + 1;
+                        }
+                    }
+                }
+                Dalmatian123.LevelComplete = false;
+                Dalmatian123.DisableContinueButton(true);
+                Dalmatian123.DisableRPCButtons(false);
+                Dalmatian123.DisplayScore();
+            },
+            "ResetPlayer": function (player) {
+                player.PreviousHands = [];
+                player.CurrentHand = "None";
+                player.Wins = 0;
+                player.Losses = 0;
+                player.Ties = 0;
+            },
+            "DisableRPCButtons": function (b) {
+                document.querySelector("#RockButton").disabled = b;
+                document.querySelector("#PaperButton").disabled = b;
+                document.querySelector("#ScissorsButton").disabled = b;
+            },
+            "DisableContinueButton": function (b) {
+                document.querySelector("#ContinueButton").disabled = b;
+            },
+            "ProcessHand": function (rpc) {
+                if (Dalmatian123.Dalmatian.CurrentHand != "None") {
+                    Dalmatian123.Dalmatian.PreviousHands.push(Dalmatian123.Dalmatian.CurrentHand);
+                }
+                var dalmatianPrevious = Dalmatian123.Dalmatian.CurrentHand;
+                if (Dalmatian123.You.CurrentHand != "None") {
+                    Dalmatian123.You.PreviousHands.push(Dalmatian123.You.CurrentHand);
+                }
+                var youPrevious = Dalmatian123.You.CurrentHand;
+                Dalmatian123.You.CurrentHand = rpc;
+                var randomWhole;
+                var handComparison;
+                switch (Dalmatian123.Level) {
+                    case 1:
+                        Dalmatian123.Dalmatian.CurrentHand = "Rock";
+                        break;
+                    case 2:
+                        randomWhole = Math.floor(Math.random() * 2);
+                        if (randomWhole == 1) {
+                            Dalmatian123.Dalmatian.CurrentHand = "Paper";
+                        } else {
+                            Dalmatian123.Dalmatian.CurrentHand = "Scissors";
+                        }
+                        break;
+                    case 3:
+                        if (dalmatianPrevious == "None") {
+                            randomWhole = Math.floor(Math.random() * 3);
+                            if (randomWhole == 0) {
+                                Dalmatian123.Dalmatian.CurrentHand = "Rock";
+                            } else if (randomWhole == 2) {
+                                Dalmatian123.Dalmatian.CurrentHand = "Paper";
+                            } else {
+                                Dalmatian123.Dalmatian.CurrentHand = "Scissors";
+                            }
+                        } else {
+                            handComparison = Dalmatian123.CompareHands(dalmatianPrevious, youPrevious);
+                            if (handComparison == "Lose") {
+                                Dalmatian123.Dalmatian.CurrentHand = youPrevious;
+                            } else {
+                                Dalmatian123.Dalmatian.CurrentHand = dalmatianPrevious;
+                            }
+                        }
+                        break;
+                    case 4:
+                        if (dalmatianPrevious == "None") {
+                            randomWhole = Math.floor(Math.random() * 3);
+                            if (randomWhole == 0) {
+                                Dalmatian123.Dalmatian.CurrentHand = "Rock";
+                            } else if (randomWhole == 2) {
+                                Dalmatian123.Dalmatian.CurrentHand = "Paper";
+                            } else {
+                                Dalmatian123.Dalmatian.CurrentHand = "Scissors";
+                            }
+                        } else {
+                            if (dalmatianPrevious == "Rock") {
+                                Dalmatian123.Dalmatian.CurrentHand = "Scissors";
+                            } else if (dalmatianPrevious == "Paper") {
+                                Dalmatian123.Dalmatian.CurrentHand = "Rock";
+                            } else {
+                                Dalmatian123.Dalmatian.CurrentHand = "Paper";
+                            }
+                        }
+                        break;
+                    case 5:
+                        randomWhole = Math.floor(Math.random() * 3);
+                        if (randomWhole == 0) {
+                            Dalmatian123.Dalmatian.CurrentHand = "Rock";
+                        } else if (randomWhole == 2) {
+                            Dalmatian123.Dalmatian.CurrentHand = "Paper";
+                        } else {
+                            Dalmatian123.Dalmatian.CurrentHand = "Scissors";
+                        }
+                        break;
+                }
+            },
+            "CompareHands": function (myHand, yourHand) {
+                if (myHand == yourHand) {
+                    return "Tie";
+                }
+                if (myHand == "Rock") {
+                    if (yourHand == "Paper") {
+                        return "Lose";
+                    } else {
+                        return "Win";
+                    }
+                } else if (myHand == "Paper") {
+                    if (yourHand == "Scissors") {
+                        return "Lose";
+                    } else {
+                        return "Win";
+                    }
+                } else {
+                    if (yourHand == "Rock") {
+                        return "Lose";
+                    } else {
+                        return "Win";
+                    }
+                }
+            },
+            "UpdateScore": function () {
+                var handComparison = Dalmatian123.CompareHands(Dalmatian123.You.CurrentHand, Dalmatian123.Dalmatian.CurrentHand);
+                if (handComparison == "Tie") {
+                    Dalmatian123.Dalmatian.Ties = Dalmatian123.Dalmatian.Ties + 1;
+                    Dalmatian123.You.Ties = Dalmatian123.You.Ties + 1;
+                } else if (handComparison == "Win") {
+                    Dalmatian123.Dalmatian.Losses = Dalmatian123.Dalmatian.Losses + 1;
+                    Dalmatian123.You.Wins = Dalmatian123.You.Wins + 1;
+                } else {
+                    Dalmatian123.Dalmatian.Wins = Dalmatian123.Dalmatian.Wins + 1;
+                    Dalmatian123.You.Losses = Dalmatian123.You.Losses + 1;
+                }
+            },
+            "DisplayScore": function () {
+                document.querySelector("#LevelParagraph").textContent = ("Level " + Dalmatian123.Level);
+                if (Dalmatian123.Dalmatian.CurrentHand == "None") {
+                    document.querySelector("#RoundStatus").textContent = ("");
+                } else {
+                    var handComparison = Dalmatian123.CompareHands(Dalmatian123.You.CurrentHand, Dalmatian123.Dalmatian.CurrentHand);
+                    var roundText = "You played " + Dalmatian123.You.CurrentHand + "." + " The Dalmatian played " + Dalmatian123.Dalmatian.CurrentHand + ".";
+                    if (handComparison == "Tie") {
+                        roundText = roundText + " It is a tie!";
+                    } else if (handComparison == "Win") {
+                        if (Dalmatian123.You.CurrentHand == "Rock") {
+                            roundText = roundText + " Rock crushes Scissors.";
+                        } else if (Dalmatian123.You.CurrentHand == "Paper") {
+                            roundText = roundText + " Paper covers Rock.";
+                        } else {
+                            roundText = roundText + " Scissors cuts Paper.";
+                        }
+                        roundText = roundText + " You win!";
+                    } else {
+                        if (Dalmatian123.Dalmatian.CurrentHand == "Rock") {
+                            roundText = roundText + " Rock crushes Scissors.";
+                        } else if (Dalmatian123.Dalmatian.CurrentHand == "Paper") {
+                            roundText = roundText + " Paper covers Rock.";
+                        } else {
+                            roundText = roundText + " Scissors cuts Paper.";
+                        }
+                        roundText = roundText + " You lose!";
+                    }
+                    document.querySelector("#RoundStatus").textContent = (roundText);
+                }
+                if (Dalmatian123.Dalmatian.Wins >= 3) {
+                    document.querySelector("#LevelStatus").textContent = ("The Dalmatian won level " + Dalmatian123.Level + " press Next to try level again.");
+                    Dalmatian123.DisableContinueButton(false);
+                    Dalmatian123.DisableRPCButtons(true);
+                } else if (Dalmatian123.You.Wins >= 3) {
+                    if (Dalmatian123.Level >= 5) {
+                        document.querySelector("#LevelStatus").textContent = ("You won level 5 and won the whole game! Press Next to restart at level 1.");
+                    } else {
+                        document.querySelector("#LevelStatus").textContent = ("You won level " + Dalmatian123.Level + "! Press Next to start the next level.");
+                    }
+                    Dalmatian123.LevelComplete = true;
+                    Dalmatian123.DisableContinueButton(false);
+                    Dalmatian123.DisableRPCButtons(true);
+                } else if (Dalmatian123.Dalmatian.Ties >= 100) {
+                    document.querySelector("#LevelStatus").textContent = ("You both tied 100 times! Yikes! Press Next to start the next level.");
+                    Dalmatian123.LevelComplete = true;
+                    Dalmatian123.DisableContinueButton(false);
+                    Dalmatian123.DisableRPCButtons(true);
+                } else {
+                    document.querySelector("#LevelStatus").textContent = ("");
+                }
+                document.querySelector("#DalmatianWinsCell").textContent = (Dalmatian123.Dalmatian.Wins);
+                //document.querySelector("#DalmatianLossesCell").textContent = (Dalmatian123.Dalmatian.Losses);
+                document.querySelector("#DalmatianTiesCell").textContent = (Dalmatian123.Dalmatian.Ties);
+                document.querySelector("#YouWinsCell").textContent = (Dalmatian123.You.Wins);
+                //document.querySelector("#YouLossesCell").textContent = (Dalmatian123.You.Losses);
+            }
+        };
+
+        window.addEventListener("load", Dalmatian123.Load);
+    </script>
+</head>
+
+<body>
+    <h1>Dalmatian 1 2 3</h1>
+    <p>The Dalmatian challenges you to five levels of Rock Paper Scissors! The Dalmatian uses a different strategy for each level.
+        You have to reach three wins before the Dalmatian to pass each level.</p>
+    <p>
+        <svg id="dalmatian123Vector" width="120" height="120" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMinYMin meet" draggable="false">
+            <title>The Dalmatian</title>
+            <rect x="0" y="0" width="80" height="80" fill="rgb(128,128,128)" />
+            <g id="dalmatianBaseVector" transform="translate(0,0)">
+                <path d="M 40 42 A 10 12 0 1 1 20 48 L 22 46 A 8 12 0 1 0 40 34 Z" fill="rgb(255,255,255)"
+                    stroke-width="2" stroke="rgb(0,0,0)"></path>
+                <path
+                    d="M 40 53 A 2 7 15 1 0 25 75 L 24 79 L 28 79 L 30 65 L 28 79 L 34 79 L 36 67 A 5 2 0 0 0 44 67 L 46 79 L 52 79 L 50 65 L 52 79 L 56 79 L 55 75 A 2 7 -15 1 0 40 53 Z"
+                    fill="rgb(255,255,255)" stroke-width="2" stroke="rgb(0,0,0)" />
+                <circle cx="33" cy="56" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="35" cy="59" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="31" cy="59" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="38" cy="60" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="44" cy="59" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="45" cy="62" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="48" cy="57" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="37" cy="65" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="32" cy="70" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="48" cy="72" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="27" cy="68" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="54" cy="74" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="33" cy="75" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="33" cy="66" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="30" cy="63" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="50" cy="62" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+            </g>
+            <g id="dalmatianVector" transform="translate(0,0)">
+                <path d="M 35 20 L 20 25 L 21 35 L 25 42 Z" fill="rgb(255,255,255)" stroke-width="2"
+                    stroke="rgb(0,0,0)" />
+                <path d="M 45 20 L 60 25 L 59 35 L 55 42 Z" fill="rgb(0,0,0)" stroke-width="2" stroke="rgb(0,0,0)" />
+                <circle cx="23" cy="28" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="25" cy="31" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="25" cy="35" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+                <circle cx="57" cy="34" r="1" fill="rgb(255,255,255)" stroke-width="1" stroke="rgb(255,255,255)" />
+                <circle cx="56" cy="37" r="1" fill="rgb(255,255,255)" stroke-width="1" stroke="rgb(255,255,255)" />
+                <ellipse cx="40" cy="35" rx="13" ry="17" fill="rgb(255,255,255)" stroke-width="2" stroke="rgb(0,0,0)" />
+                <path d="M 32 42 A 7 13 0 1 0 48 42" fill="rgb(255,255,255)" stroke-width="2" stroke="rgb(0,0,0)" />
+                <ellipse cx="33" cy="35" rx="2.5" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)"
+                    transform="rotate(15,32,35)" />
+                <ellipse cx="47" cy="35" rx="2.5" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)"
+                    transform="rotate(-15,48,35)" />
+                <ellipse cx="40" cy="53" rx="3" ry="2" fill="rgb(0,0,0)" stroke-width="0" stroke="rgb(0,0,0)" />
+                <circle cx="44" cy="47" r="1" fill="rgb(0,0,0)" stroke-width="1" stroke="rgb(0,0,0)" />
+            </g>
+            <text id="dalmatianScore" x="40px" y="340px" fill="rgb(0,0,0)" font-family="monospace" font-size="16px"
+                draggable="false">Score:0</text>
+        </svg>
+    </p>
+    <p>
+    <table>
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Wins</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Dalmatian</td>
+                <td id="DalmatianWinsCell">0</td>
+            </tr>
+            <tr>
+                <td>You</td>
+                <td id="YouWinsCell">0</td>
+            </tr>
+            <tr>
+                <td>Ties</td>
+                <td id="DalmatianTiesCell">0</td>
+        </tbody>
+    </table>
+    </p>
+    <p id="LevelParagraph"></p>
+    <p>
+        <input type="button" id="RockButton" value="Rock" />
+    </p>
+    <p>
+        <input type="button" id="PaperButton" value="Paper" />
+    </p>
+    <p>
+        <input type="button" id="ScissorsButton" value="Scissors" />
+    </p>
+    <p>
+        <input type="button" id="ContinueButton" value="Next" />
+    </p>
+    <p id="RoundStatus"></p>
+    <p id="LevelStatus"></p>
+</body>
+
+</html>
